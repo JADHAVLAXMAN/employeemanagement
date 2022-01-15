@@ -325,17 +325,33 @@
               <br />
               <input value="${localData1[index].email}" type="text" id="eemail" class="form-control" placeholder="email"/>
               <br />
-              <input value="${localData1[index].ug}" type="text" id="eug" class="form-control" placeholder="email"/>
+              <input value="${localData1[index].ug}" type="text" id="eug" class="form-control" placeholder="Under Graduate From"/>
               <br />
-              <input value="${localData1[index].pg}" type="text" id="epg" class="form-control" placeholder="email"/>
+              <input value="${localData1[index].pg}" type="text" id="epg" class="form-control" placeholder="Master From "/>
               <br />
-              <input value="${localData1[index].address}" type="text" id="eaddress" class="form-control" placeholder="email"/>
+              <input value="${localData1[index].address}" type="text" id="eaddress" class="form-control" placeholder="Address"/>
               <br />
-              <input value="${localData1[index].designation}" type="text" id="edesignation" class="form-control" placeholder="email"/>
+              <select name="" id="edesignation" class="form-select">
+                <option value="frontend" selected>Front End Dev</option>
+                <option value="backend">Back End Dev</option>
+                <option value="uiux">UI/UX Dev</option>
+                <option value="mobile">Mobile App Dev</option>
+              </select>
               <br />
-              <input value="${localData1[index].status}" type="text" id="estatus" class="form-control" placeholder="email"/>
-              <br />
-        
+              <div>
+                <input name="estatus" id="eac" type="radio" value="active" />
+                <label for="eac">active</label>
+                </div>
+                <div>
+                <input
+                  checked
+                  name="estatus"
+                  id="enc"
+                  type="radio"
+                  value="inactive"
+                  />
+                  <label for="enc">inactive</label>
+              </div>
         <button class="btn btn-success w-100" data-bs-dismiss="modal" onclick="updateDetails(${index})">Update Details</button>
         `;
       }
@@ -349,7 +365,10 @@
         var pg = document.getElementById("epg").value;
         var address = document.getElementById("eaddress").value;
         var designation = document.getElementById("edesignation").value;
-        var status = document.getElementById("estatus").value;
+        // var status = document.getElementById("estatus").value;
+        var status = document.querySelector(
+          "input[name='estatus']:checked"
+        ).value;
 
         var obj1 = {
           name: name,
