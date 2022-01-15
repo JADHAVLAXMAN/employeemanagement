@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Employee Managment</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
+      integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I"
+      crossorigin="anonymous"
+    />
+    <!-- JavaScript Bundle with Popper -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-kQtW33rZJAHjgefvhyyzcGF3C5TFyBQBA13V1RKPf4uH+bwyzQxZ6CmMZHmNBEfJ"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div class="container my-5">
+      <div class="row">
+        <div class="col-sm-8 offset-sm-2">
+          <div class="card">
+            <div class="card-header text-center text-uppercase">Empro Lite</div>
+            <div class="card-body">
+              <input
+                value="john"
+                type="text"
+                id="fname"
+                class="form-control"
+                placeholder="name"
+              />
+              <br />
+              <input
+                value="john@gmail.com"
+                type="text"
+                id="email"
+                class="form-control"
+                placeholder="email"
+              />
+              <br />
+              <input
+                type="text"
+                value="BCA"
+                id="ug"
+                class="form-control"
+                placeholder="ug detail"
+              />
+              <br />
+              <input
+                type="text"
+                value="MCA"
+                id="pg"
+                class="form-control"
+                placeholder=" pg details"
+              />
+              <br />
+              <input
+                type="text"
+                id="address"
+                value="Aurangabad"
+                class="form-control"
+                placeholder="address"
+              />
+              <br />
+              <select name="" id="designation" class="form-select">
+                <option value="frontend" selected>Front End Dev</option>
+                <option value="backend">Back End Dev</option>
+                <option value="uiux">UI/UX Dev</option>
+                <option value="mobile">Mobile App Dev</option>
+              </select>
+              <br />
+              <div>
+                <input name="status" id="ac" type="radio" value="active" />
+                <label for="ac">active</label>
+              </div>
+
+              <div>
+                <input
+                  checked
+                  name="status"
+                  id="nc"
+                  type="radio"
+                  value="inactive"
+                />
+                <label for="nc">inactive</label>
+              </div>
+              <br />
+              <button
+                class="btn btn-success btn-lg w-100"
+                onclick="addEmployee()"
+              >
+                Add Employee
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br /><br /><br />
+      <div id="output"></div>
+      <br /><br /><br />
+    </div>
+    <!-- container ends -->
+
+    <!-- modal -->
+    <div
+      class="modal fade"
+      id="showDetail"
+      data-backdrop="static"
+      data-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="showDetail"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header"></div>
+          <div class="modal-body">
+            <div id="moutput"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- modal end -->
+
+    <!-- modal -->
+    <div
+      class="modal fade"
+      id="editDetail"
+      data-backdrop="static"
+      data-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="showDetail"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header"></div>
+          <div class="modal-body">
+            <div id="medit"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- modal end -->
+
+    <!-- modal -->
+    <div
+      class="modal fade"
+      id="delateDetail"
+      data-backdrop="static"
+      data-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="showDetail"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            Are you Sure? <br />You Want to Delate The Employee.
+          </div>
+          <div class="modal-body d-flex justify-content-end">
+            <button
+              onclick="delateEmployee()"
+              class="btn btn-success"
+              data-bs-dismiss="modal"
+            >
+              Yes
+            </button>
+            &nbsp;&nbsp;
+            <button class="btn btn-success" data-bs-dismiss="modal">No</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- modal end -->
+
+    <script>
+      var data = [];
+      // Add Employee Function Start
+
+      function addEmployee() {
+        var fname = document.getElementById("fname").value;
+        var email = document.getElementById("email").value;
+        var ug = document.getElementById("ug").value;
+        var pg = document.getElementById("pg").value;
+        var address = document.getElementById("address").value;
+        var designation = document.getElementById("designation").value;
+        var status = document.querySelector(
+          "input[name='status']:checked"
+        ).value;
+        // console.log(status);
+        var obj = {
+          name: fname,
+          email: email,
+          ug: ug,
+          pg: pg,
+          address: address,
+          designation: designation,
+          status: status,
+        };
+
+        // local storage start
+        var hasKey = localStorage.getItem("employee");
+        // console.log(hasKey);
+        if (hasKey === null) {
+          data.push(obj);
+          data = JSON.stringify(data);
+          localStorage.setItem("employee", data);
+        } else {
+          /*
+                        step 1   get data from local storage
+                            eg. var dd = localStorage.getItem("keyname");
+                        step 2   parse data
+                            eg. dd = JSON.parse(dd);
+                        step 3   push object to array
+                            eg dd.push(x)
+                            where x= {
+                                name:"ddd"
+                            }
+
+                        step 4 stringify data
+                            eg.
+                            dd= JSON.stringify(dd);
+
+                        step 5  store to localstorage
+                            localStorage.setItem("keyname",dd);
+
+
+                    */
+          var dd = localStorage.getItem("employee"); // step1
+          dd = JSON.parse(dd); // step2
+          dd.push(obj); // step3
+          dd = JSON.stringify(dd); // step4
+          localStorage.setItem("employee", dd); // step 5
+        }
+
+        // local storage end
+
+        display();
+      }
+      // Add Employee Function End
+      display();
+      // Display Employee Details Function Start
+      function display() {
+        var str = `
+                <table class="table table-bordered table-dark">
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>UG</th>
+                <th>PG</th>
+                <th>Addres</th>
+                <th>Designation</th>
+                <th>Details</th>
+            </tr>
+        `;
+
+        var x = localStorage.getItem("employee");
+        if (x === null) {
+          document.getElementById("output").innerHTML = `NO DATA FOUND`;
+        } else {
+          x = JSON.parse(x);
+          for (var i = 0; i < x.length; i++) {
+            var bg = x[i].status == "active" ? "table-success" : "table-danger";
+            str += `
+                <tr class="${bg}">
+                <td>${x[i].name}</td>
+                <td>${x[i].email}</td>
+                <td>${x[i].ug}</td>
+                <td>${x[i].pg}</td>
+                <td>${x[i].address}</td>
+                <td>${x[i].designation}</td>
+                <td class="d-flex justify-content-around"><button class="btn btn-sm btn-success" data-bs-dismiss="modal" data-bs-target="#showDetail" data-bs-toggle="modal" onclick="showDetails(${i})">Show Details</button>
+                <button class="btn btn-sm btn-success" data-bs-dismiss="modal" data-bs-target="#editDetail" data-bs-toggle="modal" onclick="editDetails(${i})">Edit Details</button>
+                <button class="btn btn-sm btn-success" data-bs-dismiss="modal" data-bs-target="#delateDetail" data-bs-toggle="modal"><i class="bi bi-trash"></i></button></td>
+            </tr>
+            `;
+          }
+          str += `</table>`;
+          document.getElementById("output").innerHTML = str;
+        }
+      }
+      // Display Employee Details Function End
+
+      // Show Employee Details Function Start
+      function showDetails(arg) {
+        console.log(arg);
+
+        var localData = localStorage.getItem("employee");
+        localData = JSON.parse(localData);
+        console.log(localData[arg]);
+
+        document.getElementById("moutput").innerHTML = `
+        <ol style="list-style-type:none">
+            <li><b>Name : </b> ${localData[arg].name}</li>
+            <li><b>Email : </b> ${localData[arg].email}</li>
+            <li><b>UG : </b> ${localData[arg].ug}</li>
+            <li><b>PG : </b> ${localData[arg].pg}</li>
+            <li><b>Addres : </b> ${localData[arg].address}</li>
+            <li><b>Designation : </b> ${localData[arg].designation}</li>
+            <li><b>Status : </b> ${localData[arg].status}</li>
+            </ol>
+            <button class="btn btn-success w-100 " data-bs-dismiss="modal">Close</button>
+        `;
+      }
+      // Show Employee Details Function End
+
+      // Edit Employee Details Function Start
+      function editDetails(index) {
+        var localData1 = localStorage.getItem("employee");
+        localData1 = JSON.parse(localData1);
+        // console.log(localData1[index]);
+
+        document.getElementById("medit").innerHTML = `
+              <input value="${localData1[index].name}" type="text" id="efname" class="form-control" placeholder="name"/>
+              <br />
+              <input value="${localData1[index].email}" type="text" id="eemail" class="form-control" placeholder="email"/>
+              <br />
+              <input value="${localData1[index].ug}" type="text" id="eug" class="form-control" placeholder="email"/>
+              <br />
+              <input value="${localData1[index].pg}" type="text" id="epg" class="form-control" placeholder="email"/>
+              <br />
+              <input value="${localData1[index].address}" type="text" id="eaddress" class="form-control" placeholder="email"/>
+              <br />
+              <input value="${localData1[index].designation}" type="text" id="edesignation" class="form-control" placeholder="email"/>
+              <br />
+              <input value="${localData1[index].status}" type="text" id="estatus" class="form-control" placeholder="email"/>
+              <br />
+        
+        <button class="btn btn-success w-100" data-bs-dismiss="modal" onclick="updateDetails(${index})">Update Details</button>
+        `;
+      }
+      // Edit Employee Details Function End
+
+      // Update Employee Details Function Start
+      function updateDetails(index) {
+        var name = document.getElementById("efname").value;
+        var email = document.getElementById("eemail").value;
+        var ug = document.getElementById("eug").value;
+        var pg = document.getElementById("epg").value;
+        var address = document.getElementById("eaddress").value;
+        var designation = document.getElementById("edesignation").value;
+        var status = document.getElementById("estatus").value;
+
+        var obj1 = {
+          name: name,
+          email: email,
+          ug: ug,
+          pg: pg,
+          address: address,
+          designation: designation,
+          status: status,
+        };
+        // console.log(obj1);
+        var dd = localStorage.getItem("employee"); // step1
+        dd = JSON.parse(dd); // step2
+        // dd.push(obj1);
+        dd[index] = obj1; // step3
+        dd = JSON.stringify(dd); // step4
+        localStorage.setItem("employee", dd); // step 5
+        console.log(obj1);
+        display();
+      }
+      // Update Employee Details Function End
+
+      function delateEmployee(index) {
+        var dd = localStorage.getItem("employee"); // step1
+        dd = JSON.parse(dd); // step2
+        dd.splice(index, 1);
+        dd = JSON.stringify(dd); // step4
+        localStorage.setItem("employee", dd); // step 5
+        display();
+      }
+    </script>
+  </body>
+</html>
